@@ -14,7 +14,7 @@ current weather information using the Open-Meteo API.
 - 🕐 Display the current weather data time
 - ❌ Handle invalid city names
 - 🌐 Uses Open-Meteo APIs
-- 🇮🇷 Persian responses
+-  Persian responses
 
 ## 🛠️ Technologies
 
