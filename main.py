@@ -5,10 +5,10 @@ import telebot
 import requests
 from Weather_codes import weather_codes
 
-# 🔐 Load token from environment variable (recommended).
+# Load token from environment variable.
 # Set it with:  export TELEGRAM_BOT_TOKEN='your_new_token'
 # Or for quick testing, replace the line below with your token string directly.
-TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', 'PUT_YOUR_NEW_TOKEN_HERE')
+TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', 'YOUR_TOKEN_HERE')
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -19,13 +19,7 @@ def send_welcome(message):
 
 
 def extract_weather_info(data_weather):
-    """
-    Normalize weather_codes entry into (description, emoji, advice).
-    Supports both formats:
-      - tuple/list:  (description, emoji, advice)
-      - dict:        {'description': ..., 'emoji': ..., 'advice': ...}
-    Returns a fallback tuple if data_weather is None or unrecognized.
-    """
+
     fallback = ('نامشخص', '❓', 'توصیه‌ای موجود نیست')
 
     if data_weather is None:
@@ -108,9 +102,9 @@ def get_info(message):
         wind_speed   = weather_data['wind_speed_10m']
         weather_code = weather_data['weather_code']
 
-        # --- 5) Parse time (handle both snake_case and camelCase keys) ---
+        
         time_value  = time_data.get('time') or time_data.get('dateTime') or ''
-        # Take just HH:MM:SS from an ISO string
+        
         time_value  = time_value.split('T')[-1][:8] if 'T' in time_value else time_value[:8]
 
         date_value  = time_data.get('date') or (
@@ -122,11 +116,11 @@ def get_info(message):
             or ''
         )
 
-        # --- 6) Weather description/emoji/advice ---
+        
         data_weather = weather_codes.get(weather_code)
         description, emoji, advice = extract_weather_info(data_weather)
 
-        # --- 7) Build reply ---
+       
         response_to_user = f'''
 
 
@@ -163,10 +157,10 @@ def get_info(message):
         bot.reply_to(message, text='خطا در ارتباط با سرور آب و هوا!')
 
     except (KeyError, IndexError, TypeError) as e:
-        # Log to console to help debugging; user sees a friendly message.
+        
         print(f'[parse error] {type(e).__name__}: {e}')
         bot.reply_to(message, text='خطا در پردازش اطلاعات آب و هوا!')
 
 
 if __name__ == '__main__':
-    bot.polling(none_stop=True)
+    bot.infinity_polling()
